@@ -1,0 +1,5 @@
+Flask-Wtf
+Flask
+httpx
+pytz
+python-dotenv
