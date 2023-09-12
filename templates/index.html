@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css">
+    <style>
+        body {
+            background-color: #333;
+            color: #fff;
+        }
+        .container {
+            background-color: #444;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .btn-send {
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .btn-send:hover {
+            background-color: #0056b3;
+        }
+        .flash-message {
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out;
+        }
+        .flash-message.show {
+            opacity: 1;
+            height: auto;
+            display: flex;
+            animation: slideIn 0.5s forwards ease-in-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .spinner {
+            display: none;
+        }
+                .copyright-bar {
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+    <title>Contact Us</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Contact Us <i class="bi bi-envelope"></i></h1>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    {{ form.email.label(class="visually-hidden") }}
+                    {{ form.email(class="form-control", placeholder="Email") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    {{ form.name.label(class="visually-hidden") }}
+                    {{ form.name(class="form-control", placeholder="Name") }}
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form.message.label(class="form-label") }}
+            {{ form.message(class="form-control", rows="4", placeholder="Message") }}
+        </div>
+        <button type="submit" class="btn btn-send">
+            <span class="spinner-border spinner-border-sm spinner" role="status" aria-hidden="true"></span>
+            <i class="bi bi-paper-plane"></i> Send Message
+        </button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} flash-message alert-dismissible fade show" role="alert">
+                        <div>{{ message }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</div>
+<footer class="copyright-bar">
+    &copy; {{ year }} Python Tips Israel. All rights reserved.
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const submitButton = document.querySelector(".btn-send");
+        const spinner = document.querySelector(".spinner");
+
+        form.addEventListener("submit", function () {
+            spinner.style.display = "inline-block";
+            submitButton.setAttribute("disabled", "disabled");
+            setTimeout(function () {
+                spinner.style.display = "none";
+                submitButton.removeAttribute("disabled");
+                const flashMessage = document.querySelector('.flash-message');
+                flashMessage.style.display = 'flex';
+                setTimeout(() => {
+                    flashMessage.classList.add('show');
+                }, 100);
+
+                setTimeout(() => {
+                    flashMessage.classList.remove('show');
+                }, 5000);
+            }, 2000);
+        });
+    });
+</script>
+</body>
+</html>
